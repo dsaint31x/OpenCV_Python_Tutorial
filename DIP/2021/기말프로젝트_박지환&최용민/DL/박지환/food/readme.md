@@ -53,3 +53,32 @@ epoch = 20
 ### top validation accuracy model
 epoch - accuracy  
 05 - 0.67714
+
+
+------resnet
+## main_resnet50
+ResNet50 trainable = False  
+ResNet50 + Flatten() + Dense(35, activation='softmax')  
+epoch = 20
+
+### top validation accuracy model
+epoch - accuracy  
+15 - 0.15257
+
+## main_resnet50_finetuning
+ResNet50 trainable (conv5_block1_1_conv ~) = True  
+ResNet50 + Flatten() + Dense(35, activation='softmax')  
+epoch = 20
+
+### top validation accuracy model
+epoch - accuracy  
+17 - 0.18457
+
+## main_resnet101_finetuning
+ResNet101 trainable (conv5_block1_1_conv ~) = True  
+ResNet101 + Flatten() + Dense(35, activation='softmax')  
+epoch = 40
+
+### top validation accuracy model
+epoch - accuracy  
+33 - 0.19200
