@@ -54,6 +54,15 @@ epoch = 20
 epoch - accuracy  
 05 - 0.67714
 
+## main_finetuning_dense_drop
+inception trainable (block8_5_mixed ~) = True 
+batchsize = 100
+inception resnet v2 + Flatten() + Dropout(0.5) + Dense(35, activation='softmax')  
+epoch = 100
+
+### top validation accuracy model
+epoch - accuracy  
+61 - 0.69829
 
 ------resnet
 ## main_resnet50
