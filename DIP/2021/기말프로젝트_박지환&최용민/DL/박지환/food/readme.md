@@ -1,5 +1,5 @@
 # food classification
-
+# inceoption resnet v2
 ## main_base
 inception trainable = False  
 inception resnet v2 + Flatten() + Dense(35, activation='softmax')  
