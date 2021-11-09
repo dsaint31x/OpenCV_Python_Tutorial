@@ -64,7 +64,8 @@ epoch = 100
 epoch - accuracy  
 61 - 0.69829
 
-------resnet
+--------------
+# ResNet
 ## main_resnet50
 ResNet50 trainable = False  
 ResNet50 + Flatten() + Dense(35, activation='softmax')  
