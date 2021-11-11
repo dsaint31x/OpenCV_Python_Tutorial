@@ -64,6 +64,28 @@ epoch = 100
 epoch - accuracy  
 61 - 0.69829
 
+## main_finetuning_base2_drop_augmentation
+inception trainable (block8_5_mixed ~) = True 
+batchsize = 100
+image augmentation 
+```python
+data_gen = ImageDataGenerator(
+    rescale=1./255,
+    rotation_range=100,
+    width_shift_range=0.4,
+    height_shift_range=0.4,
+    horizontal_flip=True,
+    zoom_range=0.2,
+    shear_range=0.2
+)
+```
+inception resnet v2 + Flatten() + Dropout(0.5) + Dense(35, activation='softmax')  
+epoch = 100
+
+### top validation accuracy model
+epoch - accuracy  
+61 - 0.69829
+
 --------------
 # ResNet
 ## main_resnet50
@@ -73,7 +95,7 @@ epoch = 20
 
 ### top validation accuracy model
 epoch - accuracy  
-15 - 0.15257
+80 - 0.74857
 
 ## main_resnet50_finetuning
 ResNet50 trainable (conv5_block1_1_conv ~) = True  
