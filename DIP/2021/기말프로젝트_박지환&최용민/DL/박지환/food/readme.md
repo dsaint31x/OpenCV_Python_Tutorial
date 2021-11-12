@@ -84,7 +84,7 @@ epoch = 100
 
 ### top validation accuracy model
 epoch - accuracy  
-61 - 0.69829
+80 - 0.74857
 
 --------------
 # ResNet
@@ -95,7 +95,7 @@ epoch = 20
 
 ### top validation accuracy model
 epoch - accuracy  
-80 - 0.74857
+15 - 0.15257.h5
 
 ## main_resnet50_finetuning
 ResNet50 trainable (conv5_block1_1_conv ~) = True  
