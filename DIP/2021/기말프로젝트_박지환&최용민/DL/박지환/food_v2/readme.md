@@ -32,3 +32,13 @@ epoch = 50
 ### top validation accuracy model
 epoch - accuracy  
 41 - 0.78171
+
+## ft_base_aug
+trainable = True  
+inception resnet v2 + Flatten() + Dense(35, activation='softmax')  
+batch_size = 50  
+epoch = 50  
+
+### top validation accuracy model
+epoch - accuracy  
+32 - 0.71486
