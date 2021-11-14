@@ -65,3 +65,15 @@ epoch = 50
 ### top validation accuracy model
 epoch - accuracy  
 26 - 0.80286
+
+## ft_gap_aug_lr
+block8_5_mixed ~ trainable = True  
+inception resnet v2 + GlobalAveragePooling2D() + Dense(35, activation='softmax')  
+batch_size = 100  
+data augmentation  
+learning rate decay  
+epoch = 50  
+
+### top validation accuracy model
+epoch - accuracy  
+25 - 0.80914
