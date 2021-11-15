@@ -104,3 +104,31 @@ epoch = 50
 ### top validation accuracy model
 epoch - accuracy  
 32 - 0.89543
+
+## 299_drop
+val, test 데이터 이상한 것 다시 수정
+block8_5_mixed ~ trainable = True  
+inception resnet v2 + GlobalAveragePooling2D() + Dropout(0.2) + Dense(35, activation='softmax')  
+batch_size = 100  
+data augmentation  
+learning rate decay  
+input_size = (299,299)  
+epoch = 50  
+
+### top validation accuracy model
+epoch - accuracy  
+21 - 0.89714
+
+## 299_drop_L2
+val, test 데이터 이상한 것 다시 수정
+block8_5_mixed ~ trainable = True  
+inception resnet v2 + GlobalAveragePooling2D() + Dropout(0.2) + Dense(35, activation='softmax', kernel_regularizer='l2')  
+batch_size = 100  
+data augmentation  
+learning rate decay  
+input_size = (299,299)  
+epoch = 50  
+
+### top validation accuracy model
+epoch - accuracy  
+16 - 0.88457
