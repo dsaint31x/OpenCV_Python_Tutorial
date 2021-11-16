@@ -1,0 +1,23 @@
+{
+    "src_path" : "data/src",
+    "label_path": "data/label",
+    "convert_numbers":10,
+    "crop_numbers":10,
+    "brightness_value":null,
+    "fill_mode":"reflect",
+    "cval":null,
+    "global_HE":false,
+    "clahe":false,
+    "contrast_limit":40,
+    "grid_size":[8,8],
+    "color":0,
+    "width_shift_range":0.2,
+    "height_shift_range":0.2,
+    "degree":30,
+    "center_range":0, 
+    "vertical_flip":false, 
+    "horizontal_flip":false, 
+    "crop_size":[299,299], 
+    "save_path":"augmented"
+}
+
