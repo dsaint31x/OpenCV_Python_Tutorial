@@ -359,10 +359,10 @@ class Augment:
       if type(crop_size) != "tuple" and len(crop_size) == 2:
         size_y = crop_size[0]
         size_x = crop_size[1]
-        random_x = random.randint(0, self.cols - size_x)
-        random_y = random.randint(0, self.rows - size_y)
+        random_x = random.randint(0, self.rows - size_x)
+        random_y = random.randint(0, self.cols - size_y)
 
-        ret = temp[random_y : random_y + size_y, random_x : random_x + size_x, :]
+        ret = temp[random_x : random_x + size_x, random_y : random_y + size_y, :]
         return ret
       else:
         print('size must be tuple and len(size) == 2')
