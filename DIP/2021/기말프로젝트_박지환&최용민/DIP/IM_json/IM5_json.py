@@ -319,7 +319,7 @@ class Augment:
       cols = temp.shape[1]
       self.temp = cv2.warpAffine(temp, M, (cols, rows), borderMode=mode, borderValue=cval) # rotaion
     else:
-      pass
+      self.temp = temp
 
   def vertical_flip(self, temp, control=False):
     """
