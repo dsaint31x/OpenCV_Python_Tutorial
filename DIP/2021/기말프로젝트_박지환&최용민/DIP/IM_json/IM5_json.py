@@ -5,8 +5,6 @@ import random
 import ntpath
 import json
 
-from numpy.lib.npyio import save
-
 def make_dir(path):
   try:
     os.mkdir(path)
@@ -21,8 +19,8 @@ class Augment:
   def __init__(self, img, mask=None):
     """
     args:
-      img : image 경로.
-      mask : label 경로.
+      img : 지금은 image 경로. 추후에는 directory로 변경할 수 있음.
+      mask : 지금은 label 경로. 추후에는 directory로 변경할 수 있음.
     instances:
       self.img_name : 입력된 image 파일 이름. (파일이름, 확장자명)으로 저장. 변환된 image 저장을 할 때 파일이름에 사용.
       self.mask_name : 입력된 label 파일 이름. (파일이름, 확장자명)으로 저장. 변환된 label 저장을 할 때 파일이름에 사용.
@@ -145,9 +143,9 @@ class Augment:
         print('Input image is already grayscale')
         pass
       elif self.channels == 3:
-        self.img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        self.img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY).reshape((self.rows, self.cols, 1))
       elif self.channels == 4:
-        self.img = cv2.cvtColor(img, cv2.COLOR_BGRA2GRAY)
+        self.img = cv2.cvtColor(img, cv2.COLOR_BGRA2GRAY).reshape((self.rows, self.cols, 1))
       else:
         print(f'Maybe there is problem. self.channels = {self.channels}')
       self.channels = 1
@@ -434,6 +432,7 @@ class Augment:
         else:
           ret_label = None
           cv2.imwrite(os.path.join(save_src_path, f'{self.img_name[0]}_{i}_{j}{self.img_name[1]}'), ret_image)
+        
 
 if __name__ == '__main__':
     with open('setting.json') as f:
