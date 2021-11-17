@@ -21,8 +21,8 @@ class Augment:
   def __init__(self, img, mask=None):
     """
     args:
-      img : 지금은 image 경로. 추후에는 directory로 변경할 수 있음.
-      mask : 지금은 label 경로. 추후에는 directory로 변경할 수 있음.
+      img : image 경로.
+      mask : label 경로.
     instances:
       self.img_name : 입력된 image 파일 이름. (파일이름, 확장자명)으로 저장. 변환된 image 저장을 할 때 파일이름에 사용.
       self.mask_name : 입력된 label 파일 이름. (파일이름, 확장자명)으로 저장. 변환된 label 저장을 할 때 파일이름에 사용.
