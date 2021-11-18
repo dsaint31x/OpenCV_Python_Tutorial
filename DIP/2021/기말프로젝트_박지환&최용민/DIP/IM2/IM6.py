@@ -430,7 +430,6 @@ class Augment:
     self.clahe(self.img, clahe, contrast_limit, grid_size)
     self.color_change(self.img, color)
     self.image_mask(self.img, self.mask)
-    self.temp = self.concat
 
     for i in range(convert_numbers):
       save_src_path = os.path.join(save_path,'src')
@@ -440,6 +439,7 @@ class Augment:
         save_label_path = os.path.join(save_path,'label')
         make_dir(save_label_path)
       print(f'{i}번 째 변환-----------------------')
+      self.temp = self.concat
       self.rotation(self.temp, degree, center_range, fill_mode, cval)
       self.width_translation(self.temp, width_shift_range, fill_mode, cval)
       self.height_translation(self.temp, height_shift_range, fill_mode, cval)
