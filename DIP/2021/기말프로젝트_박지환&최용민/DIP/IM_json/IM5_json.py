@@ -5,6 +5,7 @@ import random
 import ntpath
 import json
 
+
 def make_dir(path):
   try:
     os.mkdir(path)
@@ -34,12 +35,16 @@ class Augment:
     """
     self.img_name = ntpath.splitext(ntpath.basename(img))
     self.img = cv2.imread(img, cv2.IMREAD_UNCHANGED)
+    
+
     if mask:
       self.mask_name = ntpath.splitext(ntpath.basename(mask))
       self.mask = cv2.imread(mask, cv2.IMREAD_UNCHANGED)
+      
     else:
       self.mask_name = None
       self.mask = None
+      
 
     # rows, cols 을 구함
     if self.img.ndim == 2:
@@ -54,6 +59,8 @@ class Augment:
         self.channels = None
     self.concat = None
     self.temp = None
+
+  
 
   def brightness(self, img, value=None):
     """
@@ -83,6 +90,7 @@ class Augment:
       contrast_limit : clahe에서 사용할 clipLimit [default=40]
       grid_size : (m, n), clahe에서 사용할 tileGridSize [default=(8,8)]
     """
+    
     if clahe:
       clahe_ = cv2.createCLAHE(clipLimit=contrast_limit, tileGridSize=grid_size)
       if self.channels == 1:
@@ -102,6 +110,7 @@ class Augment:
         self.img = cv2.merge((bgr_img, A))
       else:
         print(f'Maybe there is problem. img.shape : {img.shape}')
+
 
   def global_HE(self, img, global_HE=False):
     """
@@ -183,8 +192,7 @@ class Augment:
           elif mask.ndim == 2:
               mask = mask.reshape((mask.shape[0], mask.shape[1], 1))
           else:
-              print(f'Maybe there is problem. img.shape = {img.shape}, mask.shape = {mask.shape}')
-              return None
+              print(f'img.shape = {img.shape}, mask.shape = {mask.shape}')
       else:
           if img.ndim == 2: # 둘 다 channel이 1일 경우 dimension을 추가해주어야 concate 후 분리 가능
               img = img.reshape((img.shape[0], img.shape[1], 1))
@@ -192,7 +200,10 @@ class Augment:
 
       self.concat = np.concatenate((img, mask), axis=-1) # img와 mask를 합친 후 한 번에 수행
     else:
-      self.concat = img
+      if img.ndim == 2:
+        self.concat = img.reshape((img.shape[0], img.shape[1], 1))
+      else:
+        self.concat = img
       
   def width_translation(self, temp, width_shift_range=None, fill_mode='reflect', cval=None):
     """
@@ -229,7 +240,11 @@ class Augment:
 
       rows = temp.shape[0]
       cols = temp.shape[1]
-      self.temp = cv2.warpAffine(temp, M, (cols, rows), borderMode=mode, borderValue=cval) # translation
+      ret = cv2.warpAffine(temp, M, (cols, rows), borderMode=mode, borderValue=cval) # translation
+      if ret.ndim == 2:
+        ret = ret.reshape((rows, cols, 1))
+      self.temp = ret
+
     else:
       pass
 
@@ -268,7 +283,10 @@ class Augment:
 
       rows = temp.shape[0]
       cols = temp.shape[1]
-      self.temp = cv2.warpAffine(temp, M, (cols, rows), borderMode=mode, borderValue=cval) # translation
+      ret = cv2.warpAffine(temp, M, (cols, rows), borderMode=mode, borderValue=cval) # translation
+      if ret.ndim == 2:
+        ret = ret.reshape((rows, cols, 1))
+      self.temp = ret
     else:
       pass
 
@@ -315,9 +333,12 @@ class Augment:
 
       rows = temp.shape[0]
       cols = temp.shape[1]
-      self.temp = cv2.warpAffine(temp, M, (cols, rows), borderMode=mode, borderValue=cval) # rotaion
+      ret = cv2.warpAffine(temp, M, (cols, rows), borderMode=mode, borderValue=cval) # rotaion
+      if ret.ndim == 2:
+        ret = ret.reshape((rows, cols, 1))
+      self.temp = ret
     else:
-      self.temp = temp
+      self.temp = self.concat
 
   def vertical_flip(self, temp, control=False):
     """
@@ -327,7 +348,10 @@ class Augment:
       control : vertical_flip을 진행할 것인지에 대한 boolean 값. [default=False]
     """
     if control:
-      self.temp = cv2.flip(temp, 0)
+      ret = cv2.flip(temp, 0)
+      if ret.ndim == 2:
+        ret = ret.reshape((ret.shape[0], ret.shape[1], 1))
+      self.temp = ret
     else:
       pass
     
@@ -339,7 +363,10 @@ class Augment:
       control : mirror을 진행할 것인지에 대한 boolean 값. [default=False]
     """
     if control:
-      self.temp = cv2.flip(temp, 1)
+      ret = cv2.flip(temp, 1)
+      if ret.ndim == 2:
+        ret = ret.reshape((ret.shape[0], ret.shape[1], 1))
+      self.temp = ret
     else:
       pass
 
@@ -366,7 +393,7 @@ class Augment:
         return None
 
   def run(self, convert_numbers=1, crop_numbers=1, brightness_value=None, fill_mode='reflect', cval=None, global_HE=False, clahe=False, contrast_limit=40, grid_size=(8,8), color=COLOR_UNCHANGED, \
-          width_shift_range=None, height_shift_range=None, degree=None, center_range=0, vertical_flip=False, horizontal_flip=False, crop_size=None, save_path='augmented'):
+          width_shift_range=None, height_shift_range=None, degree=None, center_range=0, vertical_flip=False, horizontal_flip=False, crop_size=None, save_path='C:/Users/CYM/Desktop/DIP_image/augmented'):
     """
     변환을 실행하는 함수. save_path 밑에 src와 label 폴더로 각각 변환된 src 이미지와 label 이미지가 저장된다.
     args:
@@ -394,7 +421,6 @@ class Augment:
       save_path : 저장할 경로. [default='augmented']
     returns:
       cv2.imwrite(..)
-
       ret_image : 변환된 image
       ret_label : 변환된 label (입력된 label이 없을 경우 None)
     """
@@ -412,7 +438,8 @@ class Augment:
         save_label_path = os.path.join(save_path,'label')
         make_dir(save_label_path)
       print(f'{i}번 째 변환-----------------------')
-      self.rotation(self.concat, degree, center_range, fill_mode, cval)
+      self.temp = self.concat
+      self.rotation(self.temp, degree, center_range, fill_mode, cval)
       self.width_translation(self.temp, width_shift_range, fill_mode, cval)
       self.height_translation(self.temp, height_shift_range, fill_mode, cval)
       self.vertical_flip(self.temp, vertical_flip)
@@ -425,6 +452,7 @@ class Augment:
         else:
           ret = self.temp
         ret_image = ret[:, : , :self.channels]
+        
         if self.mask is not None:
           ret_label = ret[:, : , self.channels:]
           cv2.imwrite(os.path.join(save_src_path, f'{self.img_name[0]}_{i}_{j}{self.img_name[1]}'), ret_image)
@@ -432,6 +460,7 @@ class Augment:
         else:
           ret_label = None
           cv2.imwrite(os.path.join(save_src_path, f'{self.img_name[0]}_{i}_{j}{self.img_name[1]}'), ret_image)
+
         
 
 if __name__ == '__main__':
