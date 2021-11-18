@@ -15,8 +15,8 @@ def make_dir(path):
 
 class Augment:
   COLOR_UNCHANGED = 0
-  COLOR_GRAY = 11
-  COLOR_BGR = 12
+  COLOR_GRAY = 1
+  COLOR_BGR = 2
   def __init__(self, img, mask=None):
     """
     args:
@@ -143,7 +143,7 @@ class Augment:
     색상을 바꿔줌
     args:
       img : OpenCV로 읽어온 이미지
-      color : 변환할 컬러코드. 0(COLOR_UNCHANGED) : 그대로, 11(COLOR_GRAY) : grayscale, 12(COLOR_BGR) : BGR [default : 0]
+      color : 변환할 컬러코드. 0(COLOR_UNCHANGED) : 그대로, 1(COLOR_GRAY) : grayscale, 2(COLOR_BGR) : BGR [default : 0]
     """
     if color == 0: # 그대로
       pass
@@ -152,9 +152,9 @@ class Augment:
         print('Input image is already grayscale')
         pass
       elif self.channels == 3:
-        self.img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        self.img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY).reshape((self.rows, self.cols, 1))
       elif self.channels == 4:
-        self.img = cv2.cvtColor(img, cv2.COLOR_BGRA2GRAY)
+        self.img = cv2.cvtColor(img, cv2.COLOR_BGRA2GRAY).reshape((self.rows, self.cols, 1))
       else:
         print(f'Maybe there is problem. self.channels = {self.channels}')
       self.channels = 1
@@ -170,7 +170,7 @@ class Augment:
         print(f'Maybe there is problem. self.channels = {self.channels}')
       self.channels = 3
     else:
-      print(f'Color option must be 0(COLOR_UNCHANGED), 11(COLOR_GRAY) or 12(COLOR_BGR). Your color option = {color}')
+      print(f'Color option must be 0(COLOR_UNCHANGED), 1(COLOR_GRAY) or 2(COLOR_BGR). Your color option = {color}')
 
 
   def image_mask(self, img, mask): # image와 mask 비교 후 조건에 맞으면 합치기
@@ -192,8 +192,7 @@ class Augment:
           elif mask.ndim == 2:
               mask = mask.reshape((mask.shape[0], mask.shape[1], 1))
           else:
-              print(f'Maybe there is problem. img.shape = {img.shape}, mask.shape = {mask.shape}')
-              return None
+              print(f'img.shape = {img.shape}, mask.shape = {mask.shape}')
       else:
           if img.ndim == 2: # 둘 다 channel이 1일 경우 dimension을 추가해주어야 concate 후 분리 가능
               img = img.reshape((img.shape[0], img.shape[1], 1))
@@ -201,7 +200,10 @@ class Augment:
 
       self.concat = np.concatenate((img, mask), axis=-1) # img와 mask를 합친 후 한 번에 수행
     else:
-      self.concat = img
+      if img.ndim == 2:
+        self.concat = img.reshape((img.shape[0], img.shape[1], 1))
+      else:
+        self.concat = img
       
   def width_translation(self, temp, width_shift_range=None, fill_mode='reflect', cval=None):
     """
@@ -238,7 +240,11 @@ class Augment:
 
       rows = temp.shape[0]
       cols = temp.shape[1]
-      self.temp = cv2.warpAffine(temp, M, (cols, rows), borderMode=mode, borderValue=cval) # translation
+      ret = cv2.warpAffine(temp, M, (cols, rows), borderMode=mode, borderValue=cval) # translation
+      if ret.ndim == 2:
+        ret = ret.reshape((rows, cols, 1))
+      self.temp = ret
+
     else:
       pass
 
@@ -277,7 +283,10 @@ class Augment:
 
       rows = temp.shape[0]
       cols = temp.shape[1]
-      self.temp = cv2.warpAffine(temp, M, (cols, rows), borderMode=mode, borderValue=cval) # translation
+      ret = cv2.warpAffine(temp, M, (cols, rows), borderMode=mode, borderValue=cval) # translation
+      if ret.ndim == 2:
+        ret = ret.reshape((rows, cols, 1))
+      self.temp = ret
     else:
       pass
 
@@ -324,7 +333,10 @@ class Augment:
 
       rows = temp.shape[0]
       cols = temp.shape[1]
-      self.temp = cv2.warpAffine(temp, M, (cols, rows), borderMode=mode, borderValue=cval) # rotaion
+      ret = cv2.warpAffine(temp, M, (cols, rows), borderMode=mode, borderValue=cval) # rotaion
+      if ret.ndim == 2:
+        ret = ret.reshape((rows, cols, 1))
+      self.temp = ret
     else:
       self.temp = self.concat
 
@@ -336,7 +348,10 @@ class Augment:
       control : vertical_flip을 진행할 것인지에 대한 boolean 값. [default=False]
     """
     if control:
-      self.temp = cv2.flip(temp, 0)
+      ret = cv2.flip(temp, 0)
+      if ret.ndim == 2:
+        ret = ret.reshape((ret.shape[0], ret.shape[1], 1))
+      self.temp = ret
     else:
       pass
     
@@ -348,7 +363,10 @@ class Augment:
       control : mirror을 진행할 것인지에 대한 boolean 값. [default=False]
     """
     if control:
-      self.temp = cv2.flip(temp, 1)
+      ret = cv2.flip(temp, 1)
+      if ret.ndim == 2:
+        ret = ret.reshape((ret.shape[0], ret.shape[1], 1))
+      self.temp = ret
     else:
       pass
 
@@ -392,7 +410,7 @@ class Augment:
       clahe : boolean. clahe 사용 여부 [default=False]
       contrast_limit : clahe에서 사용할 clipLimit [default=40]
       grid_size : (m, n), clahe에서 사용할 tileGridSize [default=(8,8)]
-      color : 변환할 컬러코드. 0(COLOR_UNCHANGED) : 그대로, 11(COLOR_GRAY) : grayscale, 12(COLOR_BGR) : BGR [default=0]
+      color : 변환할 컬러코드. 0(COLOR_UNCHANGED) : 그대로, 1(COLOR_GRAY) : grayscale, 2(COLOR_BGR) : BGR [default=0]
       width_shift_range : 가로 방향으로 이동시킬 범위 (0~1) [default=None]
       height_shift_range : 세로 방향으로 이동시킬 범위 (0~1) [default=None]
       degree : 회전시킬 각도 범위 [default=None]
@@ -412,6 +430,7 @@ class Augment:
     self.clahe(self.img, clahe, contrast_limit, grid_size)
     self.color_change(self.img, color)
     self.image_mask(self.img, self.mask)
+    self.temp = self.concat
 
     for i in range(convert_numbers):
       save_src_path = os.path.join(save_path,'src')
@@ -421,7 +440,7 @@ class Augment:
         save_label_path = os.path.join(save_path,'label')
         make_dir(save_label_path)
       print(f'{i}번 째 변환-----------------------')
-      self.rotation(self.concat, degree, center_range, fill_mode, cval)
+      self.rotation(self.temp, degree, center_range, fill_mode, cval)
       self.width_translation(self.temp, width_shift_range, fill_mode, cval)
       self.height_translation(self.temp, height_shift_range, fill_mode, cval)
       self.vertical_flip(self.temp, vertical_flip)
@@ -447,10 +466,10 @@ class CCC:
     def BBB(self, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13, a14, a15, a16, a17, a18, a19, a20):
       src_path = a19
       label_path = a20
-#       print(a1, a2,a3,a4,a5,a6,a7,a8,a9,a10,a11,a12,a13,a14,a15,a16,a17,a18,a19,a20)
-#       print(a17)
-#       print(type(a17))
-#       print(type(a17[0]))
+      # print(a1, a2,a3,a4,a5,a6,a7,a8,a9,a10,a11,a12,a13,a14,a15,a16,a17,a18,a19,a20)
+      # print(a17)
+      # print(type(a17))
+      # print(type(a17[0]))
 
       
       
