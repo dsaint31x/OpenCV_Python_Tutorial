@@ -28,7 +28,7 @@ class Augment:
       self.img : OpenCV로 읽어온 image
       self.mask : OpenCV로 읽어온 label
       self.rows : image의 rows
-       : image의 cols
+      self.cols : image의 cols
       self.channels : image의 channels
       self.concat : image 혹은 image와 mask가 합쳐진 numpy array
       self.temp : 계속해서 변환되는 결과 값
