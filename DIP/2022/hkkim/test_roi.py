@@ -42,14 +42,6 @@ def onMouse(event, x, y, flags, param):
                 cv2.moveWindow('roi',0,0)
                 cv2.imwrite('./roi.png',roi)
                 print('roi is cropped and saved!')
-                # while cv2.getWindowProperty('roi', cv2.WND_PROP_VISIBLE) >= 1:
-                #     key_code = cv2.waitKey(50)
-                #     if key_code == 27:
-                #         break
-                #     elif cv2.getWindowProperty('roied_img', cv2.WND_PROP_VISIBLE) < 1:
-                #         # 메인 window가 닫힌 경우, 프로그램 종료.
-                #         exit();
-                # cv2.destroyWindow('roi')
             else:
                 cv2.imshow('roied_img', img)
                 print('unvalid roi!. select roi carefully')
