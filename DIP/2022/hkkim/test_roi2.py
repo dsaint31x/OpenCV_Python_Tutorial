@@ -1,7 +1,11 @@
 import cv2
 import numpy as np
+import os
 
-img_path = '/home/dsaint31/lecture/OpenCV_Python_Tutorial/images/lena.png'
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))  
+
+# img_path = '/home/dsaint31/lecture/OpenCV_Python_Tutorial/images/lena.png'
+img_path = os.path.join(BASE_DIR,"../../../images/lena.png")
 
 img = cv2.imread(img_path)
 cv2.imshow('img', img)
