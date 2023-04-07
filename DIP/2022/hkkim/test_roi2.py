@@ -1,5 +1,12 @@
 import cv2
 import numpy as np
+import os
+
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))  
+
+# img_path = '/home/dsaint31/lecture/OpenCV_Python_Tutorial/images/lena.png'
+img_path = os.path.join(BASE_DIR,"../../../images/lena.png")
 
 
 
