@@ -11,7 +11,12 @@ print(f'{cat.shape=}')
 # ---------------------
 import cv2
 
+# def on_trackbar(val):
+#     pass
+
+
 cv2.imshow('test_cat', cat)
+# cv2.createTrackbar("trackbar","test_cat", 0, 100, on_trackbar)
 while True:
     k = cv2.waitKey(10)
     if k & 0xFF == 27:
