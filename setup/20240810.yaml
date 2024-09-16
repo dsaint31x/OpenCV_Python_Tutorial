@@ -1,0 +1,14 @@
+name: dip
+channels:
+  - conda-forge
+dependencies:
+  - opencv
+  - matplotlib
+  - pandas
+  - ipykernel
+  - scikit-image
+  - ca-certificates
+  - certifi
+  - openssl
+  - requests
+prefix: /opt/homebrew/Caskroom/mambaforge/base/envs/dip
